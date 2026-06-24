@@ -36,6 +36,3 @@ least_common = my_counter2.most_common()[:-3:-1]
 print(least_common)
 
 print(dict(my_counter2))
-
-filtered = {k: v for k, v in my_counter2.items() if v >= 2}
-print(filtered)
