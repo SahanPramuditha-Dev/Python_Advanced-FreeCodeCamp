@@ -1,0 +1,193 @@
+# Global Interpreter Lock (GIL) in Python
+
+## What is the GIL?
+
+**GIL (Global Interpreter Lock)** is a lock used by the CPython interpreter that allows only **one thread at a time** to execute Python bytecode.
+
+In other words, even if multiple threads exist in a Python program, only one thread can actively run Python code at any given moment.
+
+---
+
+## Why Does Python Use the GIL?
+
+CPython uses **reference counting** for memory management.
+
+Since multiple threads could modify objects simultaneously, memory corruption could occur if access is not controlled.
+
+The GIL ensures that only one thread accesses Python objects at a time, making memory management simpler and safer.
+
+---
+
+## Advantages of the GIL
+
+* Simplifies memory management.
+* Prevents many thread-safety issues.
+* Improves stability of the CPython interpreter.
+* Works well for many single-threaded applications.
+
+---
+
+## Disadvantages of the GIL
+
+* Prevents true parallel execution of Python threads.
+* Multiple CPU cores cannot be fully utilized by CPU-bound threads.
+* Reduces performance for computationally intensive multithreaded programs.
+
+---
+
+## Example
+
+```python
+import threading
+
+def count():
+    x = 0
+    for i in range(10000000):
+        x += 1
+
+t1 = threading.Thread(target=count)
+t2 = threading.Thread(target=count)
+
+t1.start()
+t2.start()
+
+t1.join()
+t2.join()
+
+print("Done")
+```
+
+Although two threads are created, only one thread executes Python bytecode at a time because of the GIL.
+
+---
+
+## When is Threading Useful?
+
+Threading is still useful for **I/O-bound tasks** such as:
+
+* Reading files
+* Downloading data
+* Database operations
+* Network requests
+
+While one thread waits for I/O, another thread can run.
+
+---
+
+## How to Avoid GIL Limitations
+
+### 1. Use Multiprocessing
+
+Each process has its own:
+
+* Python interpreter
+* Memory space
+* GIL
+
+This allows true parallel execution on multiple CPU cores.
+
+```python
+from multiprocessing import Process
+
+def count():
+    x = 0
+    for i in range(10000000):
+        x += 1
+
+p1 = Process(target=count)
+p2 = Process(target=count)
+
+p1.start()
+p2.start()
+
+p1.join()
+p2.join()
+```
+
+Benefits:
+
+* Uses multiple CPU cores
+* Best for CPU-bound tasks
+
+---
+
+### 2. Use Other Python Implementations
+
+Some Python implementations do not rely on the traditional CPython GIL.
+
+Examples:
+
+* Jython
+* IronPython
+
+These implementations can provide true multithreading.
+
+---
+
+### 3. Use C/C++ Based Libraries
+
+Many libraries perform heavy computations outside the Python interpreter.
+
+Examples:
+
+* NumPy
+* SciPy
+
+```python
+import numpy as np
+
+a = np.random.rand(1000000)
+b = np.random.rand(1000000)
+
+result = np.dot(a, b)
+```
+
+The intensive calculations are performed in optimized C code, reducing the impact of the GIL.
+
+---
+
+## CPU-Bound vs I/O-Bound Tasks
+
+### CPU-Bound Tasks
+
+These spend most of their time performing calculations.
+
+Examples:
+
+* Mathematical computations
+* Image processing
+* Video encoding
+* Machine learning training
+
+Recommended approach:
+
+* Multiprocessing
+
+---
+
+### I/O-Bound Tasks
+
+These spend most of their time waiting for external operations.
+
+Examples:
+
+* File operations
+* API requests
+* Database queries
+* Network communication
+
+Recommended approach:
+
+* Threading
+
+---
+
+## Summary
+
+* GIL stands for Global Interpreter Lock.
+* Only one thread can execute Python bytecode at a time in CPython.
+* GIL simplifies memory management and thread safety.
+* GIL mainly affects CPU-bound multithreaded programs.
+* Use multiprocessing for CPU-intensive tasks.
+* Use threading for I/O-bound tasks.
+* Libraries such as NumPy and SciPy reduce GIL limitations by performing work in optimized C/C++ code.

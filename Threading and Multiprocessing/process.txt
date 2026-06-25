@@ -1,0 +1,104 @@
+# Python Processes (Multiprocessing) – Study Notes
+
+## 1. Definition
+
+A **process** is an independent instance of a program in execution.
+In Python, each process runs its own interpreter and memory space.
+
+---
+
+## 2. Key Characteristics
+
+### ✔ Multiple CPU/Core Usage
+
+* Processes can run in parallel on different CPU cores.
+* Enables true parallel execution.
+
+### ✔ Separate Memory Space
+
+* Each process has its own memory.
+* No direct memory sharing between processes.
+
+### ✔ Independent Execution
+
+* One process does not depend on another.
+* Failure in one process does not affect others.
+
+### ✔ One GIL per Process
+
+* Each process has its own Python interpreter and GIL.
+* Bypasses Python’s GIL limitation.
+
+---
+
+## 3. Advantages
+
+### ✔ Best for CPU-Bound Tasks
+
+Suitable for:
+
+* Image processing
+* Machine learning
+* Mathematical computations
+* Data analysis
+
+### ✔ Better Performance on Multi-Core Systems
+
+* Uses full CPU power effectively.
+
+### ✔ Improved Stability
+
+* Processes are isolated from each other.
+
+### ✔ Killable & Interruptible
+
+* A process can be terminated independently.
+
+---
+
+## 4. Disadvantages
+
+### ✖ High Memory Usage
+
+* Each process duplicates memory usage.
+
+### ✖ Slower Startup Time
+
+* Creating a process is slower than creating a thread.
+
+### ✖ Complex Communication (IPC)
+
+Since memory is not shared, communication requires:
+
+* Queue
+* Pipe
+* Shared memory
+* Sockets
+
+---
+
+## 5. Process vs Thread (Quick Comparison)
+
+| Feature          | Process         | Thread        |
+| ---------------- | --------------- | ------------- |
+| Memory           | Separate        | Shared        |
+| Speed (creation) | Slow            | Fast          |
+| CPU usage        | High (parallel) | Limited (GIL) |
+| Communication    | Complex (IPC)   | Simple        |
+| Stability        | High isolation  | Shared risk   |
+
+---
+
+## 6. When to Use Processes
+
+Use multiprocessing when:
+
+* Tasks are CPU-intensive
+* Parallel computation is required
+* You need to bypass the GIL limitation
+
+---
+
+## 7. Summary Insight
+
+Processes trade memory and startup cost for **true parallel performance and isolation**, making them ideal for heavy computational workloads in Python systems.

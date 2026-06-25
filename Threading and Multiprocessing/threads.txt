@@ -1,0 +1,120 @@
+# Python Threads – Study Notes
+
+## 1. Definition
+
+A **thread** is the smallest unit of execution within a process.
+Multiple threads run inside a single process and share the same memory space.
+
+---
+
+## 2. Key Characteristics
+
+### ✔ Shared Memory Space
+
+* All threads within a process share:
+
+  * Variables
+  * Data structures
+  * Heap memory
+* Enables fast communication between threads.
+
+### ✔ Lightweight
+
+* Threads consume fewer resources compared to processes.
+* Faster to create and terminate.
+
+### ✔ Concurrency (Not True Parallelism in CPython)
+
+* Threads appear to run in parallel.
+* In CPython, execution is limited by the **GIL (Global Interpreter Lock)**.
+
+### ✔ Same Process Context
+
+* All threads belong to one process.
+* If the process crashes, all threads are affected.
+
+---
+
+## 3. Advantages
+
+### ✔ Fast Context Switching
+
+* Switching between threads is faster than processes.
+
+### ✔ Efficient for I/O-Bound Tasks
+
+Best for:
+
+* Web requests
+* File operations
+* Database queries
+* Network communication
+
+### ✔ Easy Data Sharing
+
+* No need for complex IPC (Inter-Process Communication).
+* Shared memory simplifies design.
+
+---
+
+## 4. Disadvantages
+
+### ✖ Limited CPU Performance (GIL Constraint)
+
+* Only one thread executes Python bytecode at a time.
+* No true multi-core CPU utilization for CPU-heavy tasks.
+
+### ✖ Risk of Race Conditions
+
+* Shared memory can lead to data corruption if not synchronized.
+
+Example issue:
+
+* Two threads modifying the same variable at the same time.
+
+### ✖ Harder Debugging
+
+* Concurrency issues are often non-deterministic and difficult to reproduce.
+
+---
+
+## 5. Thread vs Process Comparison
+
+| Feature         | Thread        | Process        |
+| --------------- | ------------- | -------------- |
+| Memory          | Shared        | Separate       |
+| Speed           | Fast          | Slower         |
+| CPU-bound tasks | Weak          | Strong         |
+| Communication   | Easy          | Complex (IPC)  |
+| Stability       | Low isolation | High isolation |
+| Creation cost   | Low           | High           |
+
+---
+
+## 6. When to Use Threads
+
+Use threads when:
+
+* Tasks are I/O-bound (waiting-heavy workloads)
+* You need fast lightweight concurrency
+* Data sharing between tasks is required
+* Low memory overhead is important
+
+---
+
+## 7. Synchronization Tools
+
+To avoid race conditions:
+
+* `Lock`
+* `RLock`
+* `Semaphore`
+* `Event`
+* `Queue`
+
+---
+
+## 8. Summary Insight
+
+Threads are optimized for **concurrent waiting tasks**, not heavy computation.
+They provide efficiency and simplicity, but are fundamentally limited in CPU-intensive workloads due to the GIL.
